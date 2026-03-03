@@ -20,16 +20,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     if (!_formKey.currentState!.validate()) return;
     _formKey.currentState!.save();
     final id = DateTime.now().millisecondsSinceEpoch;
-    final expense = Expense(
-      id: id,
-      title: _title,
-      amount: _amount,
-      date: _date,
-    );
-    await Provider.of<ExpenseProvider>(
-      context,
-      listen: false,
-    ).addExpense(expense);
+    final expense =
+        Expense(id: id, title: _title, amount: _amount, date: _date);
+    await Provider.of<ExpenseProvider>(context, listen: false)
+        .addExpense(expense);
     if (!mounted) return;
     Navigator.of(context).pop();
   }
@@ -41,9 +35,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 3,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -64,12 +57,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   const SizedBox(height: 12),
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'Amount',
-                      border: OutlineInputBorder(),
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
+                        labelText: 'Amount', border: OutlineInputBorder()),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
                     validator: (v) => (v == null || double.tryParse(v) == null)
                         ? 'Enter a valid amount'
                         : null,
@@ -83,9 +73,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1565C0),
-                          foregroundColor: Colors.white,
-                        ),
+                            backgroundColor: const Color(0xFF1565C0),
+                            foregroundColor: Colors.white),
                         onPressed: () async {
                           final picked = await showDatePicker(
                             context: context,
@@ -99,24 +88,22 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           }
                         },
                         child: const Text('Choose'),
-                      ),
+                      )
                     ],
                   ),
                   const Spacer(),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1565C0),
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: _submit,
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 12.0),
-                        child: Text('Save', style: TextStyle(fontSize: 16)),
-                      ),
-                    ),
-                  ),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1565C0),
+                            foregroundColor: Colors.white),
+                        onPressed: _submit,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.0),
+                          child: Text('Save', style: TextStyle(fontSize: 16)),
+                        )),
+                  )
                 ],
               ),
             ),

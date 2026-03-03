@@ -1,29 +1,35 @@
-import 'package:hive/hive.dart';
+import 'package:flutter/foundation.dart';
+import '../models/expense.dart';
+import '../services/hive_service.dart';
 
-part 'expense.g.dart'; // This is for the generated adapter
+class ExpenseProvider with ChangeNotifier {
+  List<Expense> _expenses = [];
 
-@HiveType(typeId: 0)
-class Expense extends HiveObject {
-  @HiveField(0)
-  final String id;
+  List<Expense> get expenses =>
+      _expenses..sort((a, b) => b.date.compareTo(a.date));
 
-  @HiveField(1)
-  final String title;
+  double get totalSpent => _expenses.fold(0.0, (s, e) => s + e.amount);
 
-  @HiveField(2)
-  final double amount;
+  Future<void> loadExpenses() async {
+    _expenses = HiveService.loadAll();
+    notifyListeners();
+  }
 
-  @HiveField(3)
-  final DateTime date;
+  Future<void> addExpense(Expense expense) async {
+    final key = await HiveService.addExpense(expense);
+    expense.key = key;
+    _expenses.add(expense);
+    notifyListeners();
+  }
 
-  @HiveField(4)
-  dynamic key; // To store the Hive internal key
-
-  Expense({
-    required this.id,
-    required this.title,
-    required this.amount,
-    required this.date,
-    this.key,
-  });
+  Future<void> deleteExpense(Expense expense) async {
+    if (expense.key != null) {
+      await HiveService.deleteExpenseByKey(expense.key!);
+    } else {
+      // fallback: try to delete by numeric id (search box)
+      await HiveService.deleteExpenseById(expense.id);
+    }
+    _expenses.removeWhere((e) => e.key == expense.key || e.id == expense.id);
+    notifyListeners();
+  }
 }

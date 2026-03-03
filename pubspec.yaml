@@ -1,21 +1,24 @@
 name: exp_tracker
 description: A new Flutter project for Group 2 Expense Tracking.
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  
+
   # Icons for the UI
   cupertino_icons: ^1.0.2
 
   # Hive Database Dependencies
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+
+  # State management
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +34,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # If you plan to add images or custom fonts later, 
+  # If you plan to add images or custom fonts later,
   # they will be defined here:
   # assets:
   #   - assets/images/logo.png

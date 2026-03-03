@@ -1,45 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:exp_tracker/services/hive_service.dart';
-import 'package:exp_tracker/screens/splash_screen.dart';
+import 'package:provider/provider.dart';
+import 'services/hive_service.dart';
+import 'providers/expense_provider.dart';
+import 'screens/splash_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/add_expense_screen.dart';
+import 'screens/expense_detail_screen.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Hive
   await HiveService.init();
-
-  // The name here MUST match the class name below
-  runApp(const ExpenseTrackerApp());
+  runApp(const MyApp());
 }
 
-class ExpenseTrackerApp extends StatelessWidget {
-  const ExpenseTrackerApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Group 2 Expense Tracker',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (_) => ExpenseProvider(),
+      child: MaterialApp(
+        title: 'Expense Tracker',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFF1565C0), // deep blue
+            foregroundColor: Colors.white,
+            elevation: 2,
+            centerTitle: true,
+          ),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: Color(0xFF1565C0),
+          ),
+          // cards will use default CardTheme; individual Cards set shape/elevation
+        ),
+        initialRoute: '/',
+        routes: {
+          '/': (c) => const SplashScreen(),
+          '/home': (c) => const HomeScreen(),
+          '/add': (c) => const AddExpenseScreen(),
+          '/detail': (c) => const ExpenseDetailScreen(),
+        },
       ),
-      home: const SplashScreen(),
     );
-  }
-}
-
-// Your HomeScreen class stays here...
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  // ... rest of your HomeScreen code
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text("Home")));
   }
 }
